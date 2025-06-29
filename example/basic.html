@@ -1,0 +1,25 @@
+<script src="../shadowroot-injector.js" sr-autostart></script>
+
+<template sr-tagname="highlightable-title" sr-mode="open">
+	<style>
+		:host {
+			display: block;
+		}
+	</style>
+	<h1>Hello <slot></slot></h1>
+</template>
+
+<highlightable-title>World</highlightable-title>
+
+<script>
+	customElements.define(
+		'highlightable-title',
+		class extends HTMLElement {
+			connectedCallback() {
+				this.addEventListener('click', () => {
+					this.style.background = 'yellow';
+				});
+			}
+		}
+	);
+</script>

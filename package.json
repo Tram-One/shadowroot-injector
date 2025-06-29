@@ -1,0 +1,38 @@
+{
+	"name": "shadowroot-injector",
+	"version": "1.0.0",
+	"description": "🪡 Library to declaratively define shadowroots to repeat in HTML templates",
+	"main": "shadowroot-injector.js",
+	"files": [
+		"shadowroot-injector.js",
+		"shadowroot-injector.min.js"
+	],
+	"scripts": {
+		"prepublishOnly": "npm run build",
+		"build": "uglifyjs shadowroot-injector.js -o shadowroot-injector.min.js -c -m",
+		"pretest": "npm run build",
+		"test": "playwright test --ui",
+		"test:ci": "playwright test"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Tram-One/shadowroot-injector.git"
+	},
+	"keywords": [],
+	"author": {
+		"name": "Jesse Jurman",
+		"email": "j.r.jurman@gmail.com",
+		"url": "https://jrjurman.com"
+	},
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/Tram-One/shadowroot-injector/issues"
+	},
+	"homepage": "https://github.com/Tram-One/shadowroot-injector#readme",
+	"devDependencies": {
+		"@playwright/test": "^1.53.1",
+		"playwright-webkit": "^1.53.1",
+		"prettier": "^3.6.2",
+		"uglify-js": "^3.19.3"
+	}
+}

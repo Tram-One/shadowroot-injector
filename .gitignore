@@ -1,0 +1,11 @@
+# Dependency Directory
+node_modules
+
+# minified output
+*.min.js
+
+# playwrite
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
