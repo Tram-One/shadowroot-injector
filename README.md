@@ -2,7 +2,14 @@
 
 _🪡 declaratively define shadowroots to repeat in HTML templates_
 
-## Example
+## What is ShadowRoot Injector?
+
+ShadowRoot Injector lets you define templates for custom elements using HTML. When those elements appear in the DOM, the
+library will automatically insert the template you defined into the element. You can then, optionally, upgrade the
+element using native web-component definitions (either inline in a script tag, or imported as a separate component
+definition).
+
+### Example
 
 ```html
 <!-- 1. Auto-start the injector -->
@@ -50,13 +57,6 @@ _🪡 declaratively define shadowroots to repeat in HTML templates_
   You can make git issues or pull requests for any issues you find.
 </callout-alert>
 ```
-
-## What is ShadowRoot Injector?
-
-ShadowRoot Injector lets you define templates for custom elements using HTML. When those elements appear in the DOM, the
-library will automatically insert the template you defined into the element. You can then, optionally, upgrade the
-element using native web-component definitions (either inline in a script tag, or imported as a separate component
-definition).
 
 ### Why?
 
@@ -115,5 +115,7 @@ While not required, you can use the JavaScript API to interface directly with th
   <dd>This function stops the observers started by <code>startObservers</code>.</dd>
 </dl>
 
-> [!note] If you include `sr-autostart` in the script you used to import, an instance of the ShadowRoot Injector will
+<!-- prettier-ignore -->
+> [!note]
+> If you include `sr-autostart` in the script you used to import, an instance of the ShadowRoot Injector will
 > already be running and available to access as part of `window.shadowRootInjector`
