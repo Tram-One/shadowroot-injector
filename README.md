@@ -103,24 +103,32 @@ for example, `shadowrootdelegatesfocus`, `shadowrootclonable`, or even `shadowro
 While not required, you can use the JavaScript API to interface directly with the ShadowRoot Injector library. This can
 also be useful when you need to control when the shadow root is injected in more complex web components.
 
-<dl>
-  <dt><code>ShadowRootInjector.registerTemplateDefinition(template: HTMLTemplateElement)</code></dt>
-  <dd>This function takes in a template node (as described above in the HTML API) and registers it for use later. This is useful if you want to programmatically add templates, or want to do so manually, without a observer on the page.</dd>
+The `ShadowRootInjector` class is available as a default export of the script. All the API methods below are method
+calls you can make on an instance of the `ShadowRootInjector` class.
 
-  <dt><code>ShadowRootInjector.injectRegisteredTemplate(node: HTMLElement)</code></dt>
-  <dd>This function takes in an HTML Element, and injects a known (registered) ShadowRoot template.</dd>
-
-  <dt><code>ShadowRootInjector.startObservers</code></dt>
-  <dd>This function starts the Mutation Observers associated with detecting new templates to register (calling <code>registerTemplateDefinition</code>), and finding custom elements to insert templates into (calling <code>injectRegisteredTemplate</code>).</dd>
-
-  <dt><code>ShadowRootInjector.stopObservers</code></dt>
-  <dd>This function stops the observers started by <code>startObservers</code>.</dd>
-</dl>
+```js
+const ShadowRootInjector = require('shadowroot-injector');
+const injector = new ShadowRootInjector();
+```
 
 <!-- prettier-ignore -->
 > [!note]
 > If you include `sr-autostart` in the script you used to import, an instance of the ShadowRoot Injector will
 > already be running and available to access as part of `window.shadowRootInjector`
+
+<dl>
+  <dt><code>shadowRootInjector.registerTemplateDefinition(template: HTMLTemplateElement)</code></dt>
+  <dd>This function takes in a template node (as described above in the HTML API) and registers it for use later. This is useful if you want to programmatically add templates, or want to do so manually, without a observer on the page.</dd>
+
+  <dt><code>shadowRootInjector.injectRegisteredTemplate(node: HTMLElement)</code></dt>
+  <dd>This function takes in an HTML Element, and injects a known (registered) ShadowRoot template.</dd>
+
+  <dt><code>shadowRootInjector.startObservers()</code></dt>
+  <dd>This function starts the Mutation Observers associated with detecting new templates to register (calling <code>registerTemplateDefinition</code>), and finding custom elements to insert templates into (calling <code>injectRegisteredTemplate</code>).</dd>
+
+  <dt><code>shadowRootInjector.stopObservers()</code></dt>
+  <dd>This function stops the observers started by <code>startObservers</code>.</dd>
+</dl>
 
 ## Task List Example
 
@@ -213,3 +221,9 @@ definition above.
   });
 </script>
 ```
+
+## Contributions / Discussions
+
+If you think this is useful or interesting, I'd love to hear your thoughts! Feel free to
+[reach out to me on mastodon](https://fosstodon.org/@jrjurman), or join the
+[Tram-One discord](https://discord.gg/dpBXAQC).

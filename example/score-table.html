@@ -1,0 +1,36 @@
+<script src="../shadowroot-injector.js" sr-autostart></script>
+
+<template sr-tagname="score-column" sr-mode="open">
+	<style>
+		label {
+			display: flex;
+			flex-direction: column;
+			max-width: 200px;
+		}
+	</style>
+
+	<section>
+		<label> Name: <input type="text" /> </label>
+		<label>
+			Scores:
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+			<input type="text" />
+		</label>
+	</section>
+</template>
+
+<button id="addPlayerButton">Add Player</button>
+
+<main id="scoreTable" style="display: flex; gap: 8px">
+	<score-column></score-column>
+</main>
+
+<script>
+	addPlayerButton.addEventListener('click', () => {
+		const newScoreColumn = document.createElement('score-column');
+		scoreTable.append(newScoreColumn);
+	});
+</script>
