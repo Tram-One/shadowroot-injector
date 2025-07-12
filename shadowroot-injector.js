@@ -55,6 +55,11 @@ class ShadowRootInjector {
 
 	/** function that attaches a registered shadow root template to a given node */
 	injectRegisteredTemplate(node) {
+		// if we already have a shadow root, do not attempt to inject a template
+		if (node.shadowRoot) {
+			return;
+		}
+
 		// get the template that exists for this node
 		const nodeTagName = node.tagName;
 		const template = this.shadowRootInjectorElementMap.get(nodeTagName);

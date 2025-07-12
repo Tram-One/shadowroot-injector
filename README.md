@@ -23,23 +23,24 @@ definition).
       display: block;
     }
 
-    div {
+    details {
       display: block;
       border-left: solid 3px rgb(var(--callout-color));
       background: rgba(var(--callout-color), 0.1);
       padding: 0.5em;
     }
 
-    slot[name='title'] {
+    summary {
       font-weight: bold;
       color: rgb(var(--callout-color));
+      list-style: none;
     }
   </style>
 
-  <div>
-    <slot name="title"></slot>
+  <details open>
+    <summary><slot name="title"></slot></summary>
     <slot></slot>
-  </div>
+  </details>
 </template>
 
 <!-- 3. Use it anywhere -->
@@ -99,7 +100,8 @@ for example, `shadowrootdelegatesfocus`, `shadowrootclonable`, or even `shadowro
 
 ### JS API
 
-While not required, you can use the JavaScript API to interface directly with the ShadowRoot Injector library.
+While not required, you can use the JavaScript API to interface directly with the ShadowRoot Injector library. This can
+also be useful when you need to control when the shadow root is injected in more complex web components.
 
 <dl>
   <dt><code>ShadowRootInjector.registerTemplateDefinition(template: HTMLTemplateElement)</code></dt>
@@ -119,3 +121,95 @@ While not required, you can use the JavaScript API to interface directly with th
 > [!note]
 > If you include `sr-autostart` in the script you used to import, an instance of the ShadowRoot Injector will
 > already be running and available to access as part of `window.shadowRootInjector`
+
+## Task List Example
+
+To see these APIs come together, lets look at a more complex Task List example, step by step (you can see the entire
+file in `example/task-list.html`).
+
+First, we'll import the library, and use the `sr-autostart` attribute to immediately start the observers that watch for
+template definitions, and instances of registered elements.
+
+```html
+<script src="https://unpkg.com/shadowroot-injector@1" sr-autostart></script>
+```
+
+Next we'll build a template definition for a single `task-item`. It has some styles, and some basic markup.
+
+```html
+<template sr-tagname="task-item" sr-mode="open">
+  <style>
+    :host {
+      display: list-item;
+    }
+    li {
+      display: flex;
+      gap: 12px;
+    }
+  </style>
+  <li>
+    <slot></slot>
+    <button>remove</button>
+  </li>
+</template>
+```
+
+We'll create a list to hold some hard-coded task items.
+
+```html
+<ul id="taskList">
+  <task-item>Add Items</task-item>
+  <task-item>Remove Items</task-item>
+</ul>
+```
+
+If we stopped here, the task items would present as we'd expect, but wouldn't be interactive. To make it interactive,
+we'll upgrade our `task-item` custom element into a web component, with event listeners and all. Any existing
+`task-item` elements in the page will upgrade automatically.
+
+<!-- prettier-ignore -->
+> [!important]
+> In the `connectedCallback`, we call `shadowRootInjector.injectRegisteredTemplate(this);`. By doing this,
+> we'll ensure that we have access to shadowRoot elements for the rest of the function.
+
+```html
+<script>
+  customElements.define(
+    'task-item',
+    class extends HTMLElement {
+      connectedCallback() {
+        shadowRootInjector.injectRegisteredTemplate(this);
+        this.shadowRoot.querySelector('button').addEventListener('click', () => {
+          this.remove();
+        });
+      }
+    },
+  );
+</script>
+```
+
+Finally we add a control to create new `task-item` elements. Any new `task-items` created will be defined by the class
+definition above.
+
+<!-- prettier-ignore -->
+> [!note]
+> If we hadn't called `shadowRootInjector.injectRegisteredTemplate` directly, the ShadowRootInjector library would still
+> inject shadowRoot templates after the element was attached to the page.
+
+```html
+<label>
+  Add Task
+  <input id="addTaskInput" type="text" />
+</label>
+
+<script>
+  addTaskInput.addEventListener('keyup', (event) => {
+    if (event.code === 'Enter') {
+      const newListItem = document.createElement('task-item');
+      newListItem.textContent = addTaskInput.value;
+      addTaskInput.value = '';
+      taskList.append(newListItem);
+    }
+  });
+</script>
+```

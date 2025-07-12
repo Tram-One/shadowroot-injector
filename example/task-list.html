@@ -1,0 +1,52 @@
+<script src="../shadowroot-injector.js" sr-autostart></script>
+
+<template sr-tagname="task-item" sr-mode="open">
+	<style>
+		:host {
+			display: list-item;
+		}
+		li {
+			display: flex;
+			gap: 12px;
+		}
+	</style>
+	<li>
+		<slot></slot>
+		<button>remove</button>
+	</li>
+</template>
+
+<ul id="taskList">
+	<task-item>Add Items</task-item>
+	<task-item>Remove Items</task-item>
+</ul>
+
+<script>
+	customElements.define(
+		'task-item',
+		class extends HTMLElement {
+			connectedCallback() {
+				shadowRootInjector.injectRegisteredTemplate(this);
+				this.shadowRoot.querySelector('button').addEventListener('click', () => {
+					this.remove();
+				});
+			}
+		},
+	);
+</script>
+
+<label>
+	Add Task
+	<input id="addTaskInput" type="text" />
+</label>
+
+<script>
+	addTaskInput.addEventListener('keyup', (event) => {
+		if (event.code === 'Enter') {
+			const newListItem = document.createElement('task-item');
+			newListItem.textContent = addTaskInput.value;
+			addTaskInput.value = '';
+			taskList.append(newListItem);
+		}
+	});
+</script>

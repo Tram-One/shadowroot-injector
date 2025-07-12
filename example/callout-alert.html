@@ -1,0 +1,42 @@
+<script src="https://unpkg.com/shadowroot-injector@1" sr-autostart></script>
+
+<template sr-tagname="callout-alert" sr-mode="open">
+	<style>
+		:host,
+		slot {
+			display: block;
+		}
+
+		details {
+			display: block;
+			border-left: solid 3px rgb(var(--callout-color));
+			background: rgba(var(--callout-color), 0.1);
+			padding: 0.5em;
+		}
+
+		summary {
+			font-weight: bold;
+			color: rgb(var(--callout-color));
+			list-style: none;
+		}
+	</style>
+
+	<details open>
+		<summary><slot name="title"></slot></summary>
+		<slot></slot>
+	</details>
+</template>
+
+<p>ShadowRoot Injector lets you repeat templates easily, no JS required!</p>
+
+<callout-alert style="--callout-color: 160, 40, 40">
+	<span slot="title">Pro Tip!</span>
+	If you want to add more behavior, you can upgrade custom-elements into web-components any time with JavaScript!
+</callout-alert>
+
+<p>You can check out the repository on Github.</p>
+
+<callout-alert style="--callout-color: 40, 40, 160">
+	<span slot="title">PRs Welcome!</span>
+	You can make git issues or pull requests for any issues you find.
+</callout-alert>
