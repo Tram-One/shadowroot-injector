@@ -13,7 +13,7 @@
 		"prep-bundle-test": "cd bundle-example; npm ci; npx parcel build index.html",
 		"pretest": "npm run build && npm run prep-bundle-test",
 		"test": "playwright test --ui",
-		"test:ci": "playwright test"
+		"test:ci": "npm run pretest && playwright test"
 	},
 	"repository": {
 		"type": "git",
