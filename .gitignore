@@ -9,3 +9,7 @@ node_modules
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# parcel (used for example)
+.parcel-cache
+dist

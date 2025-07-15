@@ -10,7 +10,8 @@
 	"scripts": {
 		"prepublishOnly": "npm run build",
 		"build": "uglifyjs shadowroot-injector.js -o shadowroot-injector.min.js -c -m",
-		"pretest": "npm run build",
+		"prep-bundle-test": "cd bundle-example; npm ci; npx parcel build index.html",
+		"pretest": "npm run build && npm run prep-bundle-test",
 		"test": "playwright test --ui",
 		"test:ci": "playwright test"
 	},
@@ -33,6 +34,7 @@
 		"@playwright/test": "^1.53.1",
 		"playwright-webkit": "^1.53.1",
 		"prettier": "^3.6.2",
+		"serve": "^14.2.4",
 		"uglify-js": "^3.19.3"
 	}
 }

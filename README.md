@@ -111,6 +111,15 @@ const ShadowRootInjector = require('shadowroot-injector');
 const injector = new ShadowRootInjector();
 ```
 
+If you are not using a bundler, you can access the `ShadowRootInjector` class attached to the `window` object.
+
+```js
+<script src="https://unpkg.com/shadowroot-injector@1"></script>
+<script>
+  const injector = new window.ShadowRootInjector();
+</script>
+```
+
 <!-- prettier-ignore -->
 > [!note]
 > If you include `sr-autostart` in the script you used to import, an instance of the ShadowRoot Injector will

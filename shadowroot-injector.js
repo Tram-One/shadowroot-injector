@@ -97,11 +97,13 @@ class ShadowRootInjector {
 // check if we are running as a module (if we are, expose the ShadowRootInjector to be imported)
 if (typeof module !== 'undefined') {
 	module.exports = ShadowRootInjector;
+} else {
+	window.ShadowRootInjector = ShadowRootInjector;
 }
 
 // check if the script tag has a `autostart` attribute (this indicates we should build and start the injector),
 // otherwise we'll defer to the user to do this in their own script
-if (document?.currentScript.hasAttribute('sr-autostart')) {
+if (document?.currentScript?.hasAttribute('sr-autostart')) {
 	window.shadowRootInjector = new ShadowRootInjector();
 	window.shadowRootInjector.startObservers();
 }

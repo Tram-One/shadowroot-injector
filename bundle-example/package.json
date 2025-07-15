@@ -1,0 +1,7 @@
+{
+	"name": "js-example",
+	"devDependencies": {
+		"parcel": "^2.15.4",
+		"shadowroot-injector": ".."
+	}
+}

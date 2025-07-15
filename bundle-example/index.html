@@ -1,0 +1,34 @@
+<!-- this specific example is to show how to use the JS APIs of the shadowroot-injector -->
+<script type="module" src="./callout-alert.js"></script>
+
+<template id="calloutAlertDefinition" sr-tagname="callout-alert" sr-mode="open">
+	<style>
+		:host,
+		slot {
+			display: block;
+		}
+
+		details {
+			display: block;
+			border-left: solid 3px rgb(var(--callout-color));
+			background: rgba(var(--callout-color), 0.1);
+			padding: 0.5em;
+		}
+
+		summary {
+			font-weight: bold;
+			color: rgb(var(--callout-color));
+			list-style: none;
+		}
+	</style>
+
+	<details open>
+		<summary><slot name="title"></slot></summary>
+		<slot></slot>
+	</details>
+</template>
+
+<callout-alert id="calloutAlertElement" style="--callout-color: 160, 40, 40">
+	<span slot="title">Pro Tip!</span>
+	If you want to add more behavior, you can upgrade custom-elements into web-components any time with JavaScript!
+</callout-alert>
