@@ -71,8 +71,8 @@ module.exports = defineConfig({
 
 	/* Run your local dev server before starting the tests */
 	webServer: {
-		command: 'npx serve bundle-example/dist',
-		url: 'http://127.0.0.1:3000',
+		command: 'npx serve bundle-example/dist -l 5173',
+		port: 5173,
 		reuseExistingServer: !process.env.CI,
 	},
 });
