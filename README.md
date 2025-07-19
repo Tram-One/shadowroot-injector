@@ -11,6 +11,9 @@ definition).
 
 ### Example
 
+The example below shows a markdown callout. You can see a running example live on
+[codepen](https://codepen.io/JRJurman/pen/MYaKErE).
+
 ```html
 <!-- 1. Auto-start the injector -->
 <script src="https://unpkg.com/shadowroot-injector@1" sr-autostart></script>
@@ -142,7 +145,7 @@ If you are not using a bundler, you can access the `ShadowRootInjector` class at
 ## Task List Example
 
 To see these APIs come together, lets look at a more complex Task List example, step by step (you can see the entire
-file in `example/task-list.html`).
+file in `example/task-list.html`). You can see it live on [codepen](https://codepen.io/JRJurman/pen/JoYGrpe).
 
 First, we'll import the library, and use the `sr-autostart` attribute to immediately start the observers that watch for
 template definitions, and instances of registered elements.
