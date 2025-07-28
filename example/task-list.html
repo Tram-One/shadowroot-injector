@@ -1,20 +1,22 @@
-<script src="../shadowroot-injector.js" sr-autostart></script>
+<script src="../shadowroot-injector.js"></script>
 
-<template sr-tagname="task-item" sr-mode="open">
-	<style>
-		:host {
-			display: list-item;
-		}
-		li {
-			display: flex;
-			gap: 12px;
-		}
-	</style>
-	<li>
-		<slot></slot>
-		<button>remove</button>
-	</li>
-</template>
+<shadowroot-for selector="task-item" mode="open">
+	<template>
+		<style>
+			:host {
+				display: list-item;
+			}
+			li {
+				display: flex;
+				gap: 12px;
+			}
+		</style>
+		<li>
+			<slot></slot>
+			<button>remove</button>
+		</li>
+	</template>
+</shadowroot-for>
 
 <ul id="taskList">
 	<task-item>Add Items</task-item>
