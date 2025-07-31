@@ -9,7 +9,7 @@ class ShadowRootInjector extends HTMLElement {
 		if (shadowRootTemplate === null) {
 			this.watchForTemplateDefinition();
 		} else {
-			this.registerTemplateDefinition();
+			this.applyTemplateDefinitionToDocument();
 		}
 	}
 
@@ -24,7 +24,7 @@ class ShadowRootInjector extends HTMLElement {
 					// if we found one, stop the mutation observer (we don't need to wait for more templates)
 					const previousNode = newNode.previousSibling;
 					if (previousNode && previousNode.tagName === 'TEMPLATE') {
-						this.registerTemplateDefinition();
+						this.applyTemplateDefinitionToDocument();
 						observer.disconnect();
 					}
 				}
@@ -36,7 +36,7 @@ class ShadowRootInjector extends HTMLElement {
 	}
 
 	/** method to attach template to existing elements, and start mutation observer for any future elements */
-	registerTemplateDefinition() {
+	applyTemplateDefinitionToDocument() {
 		const selector = this.getAttribute('selector');
 
 		// see if there are any existing elements to attach a shadow root for already in the document
