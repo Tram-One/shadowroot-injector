@@ -24,11 +24,12 @@
 </ul>
 
 <script>
+	const taskItemShadowRootInjector = document.querySelector('shadowroot-for[selector="task-item"]');
 	customElements.define(
 		'task-item',
 		class extends HTMLElement {
 			connectedCallback() {
-				shadowRootInjector.injectRegisteredTemplate(this);
+				taskItemShadowRootInjector.injectRegisteredTemplate(this);
 				this.shadowRoot.querySelector('button').addEventListener('click', () => {
 					this.remove();
 				});

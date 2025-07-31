@@ -10,8 +10,7 @@
 	"scripts": {
 		"prepublishOnly": "npm run build",
 		"build": "uglifyjs shadowroot-injector.js -o shadowroot-injector.min.js -c -m",
-		"prep-bundle-test": "cd bundle-example; npm ci; npx parcel build index.html",
-		"pretest": "npm run build && npm run prep-bundle-test",
+		"pretest": "npm run build",
 		"test": "playwright test --ui",
 		"test:ci": "npm run pretest && playwright test"
 	},
