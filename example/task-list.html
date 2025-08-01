@@ -1,7 +1,7 @@
 <script src="../shadowroot-injector.js"></script>
 
 <shadowroot-for selector="task-item" mode="open">
-	<template>
+	<template shadowrootdelegatesfocus>
 		<style>
 			:host {
 				display: list-item;
@@ -13,7 +13,7 @@
 		</style>
 		<li>
 			<slot></slot>
-			<button>remove</button>
+			<button tabindex="0">remove</button>
 		</li>
 	</template>
 </shadowroot-for>

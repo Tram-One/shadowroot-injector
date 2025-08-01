@@ -49,7 +49,7 @@ class ShadowRootInjector extends HTMLElement {
 		const checkAndInsertShadowRootsForMutationLists = (mutationList) => {
 			for (const mutation of mutationList) {
 				for (const newNode of mutation?.addedNodes || []) {
-					if (newNode.matches(selector)) {
+					if (newNode.matches?.(selector)) {
 						this.injectRegisteredTemplate(newNode);
 					}
 				}
