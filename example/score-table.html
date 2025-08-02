@@ -1,26 +1,28 @@
-<script src="../shadowroot-injector.js" sr-autostart></script>
+<script src="../shadowroot-injector.js"></script>
 
-<template sr-tagname="score-column" sr-mode="open">
-	<style>
-		label {
-			display: flex;
-			flex-direction: column;
-			max-width: 200px;
-		}
-	</style>
+<shadowroot-for selector="score-column" mode="open">
+	<template>
+		<style>
+			label {
+				display: flex;
+				flex-direction: column;
+				max-width: 200px;
+			}
+		</style>
 
-	<section>
-		<label> Name: <input type="text" /> </label>
-		<label>
-			Scores:
-			<input type="text" />
-			<input type="text" />
-			<input type="text" />
-			<input type="text" />
-			<input type="text" />
-		</label>
-	</section>
-</template>
+		<section>
+			<label> Name: <input type="text" /> </label>
+			<label>
+				Scores:
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+				<input type="text" />
+			</label>
+		</section>
+	</template>
+</shadowroot-for>
 
 <button id="addPlayerButton">Add Player</button>
 

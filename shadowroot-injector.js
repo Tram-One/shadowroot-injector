@@ -1,35 +1,55 @@
 // ShadowRoot Injector - 🪡 declaratively define shadowroots to repeat in HTML templates
 
-class ShadowRootInjector {
-	constructor() {
-		// map of known element tag names to shadow root template definitions
-		this.shadowRootInjectorElementMap = new Map();
+class ShadowRootInjector extends HTMLElement {
+	connectedCallback() {
+		// verify that we have a child template to register
+		const shadowRootTemplate = this.querySelector('template');
 
-		/** function that takes in a mutation list and registers any templates as element definitions */
-		const checkAndRegisterTemplatesForMutationLists = (mutationList) => {
+		// if we don't have one yet, add mutation observer for when the template is added
+		if (shadowRootTemplate === null) {
+			this.watchForTemplateDefinition();
+		} else {
+			this.applyTemplateDefinitionToDocument();
+		}
+	}
+
+	/** method to add a mutation observer to watch for a child template to be added */
+	watchForTemplateDefinition() {
+		/** function that takes in a mutation list and determines if we've completed the template node */
+		const checkAndRegisterTemplatesForMutationLists = (mutationList, observer) => {
 			for (const mutation of mutationList) {
 				for (const newNode of mutation?.addedNodes || []) {
 					// if this is the element AFTER an injectable template, register that template for future elements
 					// (this will almost always be a TEXT node, even if the next actual element would be an element)
+					// if we found one, stop the mutation observer (we don't need to wait for more templates)
 					const previousNode = newNode.previousSibling;
-					if (previousNode && previousNode.tagName === 'TEMPLATE' && previousNode.hasAttribute('sr-mode')) {
-						this.registerTemplateDefinition(previousNode);
+					if (previousNode && previousNode.tagName === 'TEMPLATE') {
+						this.applyTemplateDefinitionToDocument();
+						observer.disconnect();
 					}
 				}
 			}
 		};
 
-		// Mutation Observer to register templates as known element definitions
-		this.templateDefinitionObserver = new MutationObserver((mutationList) => {
-			checkAndRegisterTemplatesForMutationLists(mutationList);
+		this.templateDefinitionObserver = new MutationObserver(checkAndRegisterTemplatesForMutationLists);
+		this.templateDefinitionObserver.observe(this, { childList: true, subtree: true });
+	}
+
+	/** method to attach template to existing elements, and start mutation observer for any future elements */
+	applyTemplateDefinitionToDocument() {
+		const selector = this.getAttribute('selector');
+
+		// see if there are any existing elements to attach a shadow root for already in the document
+		const existingElements = this.ownerDocument.querySelectorAll(selector);
+		existingElements.forEach((element) => {
+			this.injectRegisteredTemplate(element);
 		});
 
-		/** function that takes in a mutation list and inserts templates for already registered elements */
+		// start mutation observer for any future elements that might appear in the document
 		const checkAndInsertShadowRootsForMutationLists = (mutationList) => {
 			for (const mutation of mutationList) {
 				for (const newNode of mutation?.addedNodes || []) {
-					const newNodeTagName = newNode.tagName;
-					if (this.shadowRootInjectorElementMap.has(newNodeTagName)) {
+					if (newNode.matches?.(selector)) {
 						this.injectRegisteredTemplate(newNode);
 					}
 				}
@@ -40,70 +60,38 @@ class ShadowRootInjector {
 		this.registeredElementObserver = new MutationObserver((mutationList) =>
 			checkAndInsertShadowRootsForMutationLists(mutationList),
 		);
+		this.registeredElementObserver.observe(this.ownerDocument.documentElement, { childList: true, subtree: true });
 	}
 
-	/** function that registers a template to be used later with custom elements */
-	registerTemplateDefinition(template) {
-		const tagName = template.getAttribute('sr-tagname');
-		// to be able to actually attach a shadowroot, we'll clone and set the shadowroot mode
-		const shadowRootTemplate = template.cloneNode(true);
-		shadowRootTemplate.setAttribute('shadowrootmode', template.getAttribute('sr-mode'));
-		shadowRootTemplate.removeAttribute('sr-tagname');
-		shadowRootTemplate.removeAttribute('sr-mode');
-		this.shadowRootInjectorElementMap.set(tagName.toUpperCase(), shadowRootTemplate);
-	}
-
-	/** function that attaches a registered shadow root template to a given node */
+	/** method that attaches the shadow root template to a given node */
 	injectRegisteredTemplate(node) {
 		// if we already have a shadow root, do not attempt to inject a template
 		if (node.shadowRoot) {
 			return;
 		}
 
-		// get the template that exists for this node
-		const nodeTagName = node.tagName;
-		const template = this.shadowRootInjectorElementMap.get(nodeTagName);
-
-		// if there is no defined template, return early
-		if (!template) {
-			return;
-		}
+		// build shadow root template
+		const shadowRootTemplate = this.querySelector('template').cloneNode(true);
+		shadowRootTemplate.setAttribute('shadowrootmode', this.getAttribute('mode'));
 
 		// build the actual shadow root object in a placeholder (we will copy this later into real elements)
 		const shadowRootPlaceholder = document.createElement('div');
 
 		// using setHTMLUnsafe allows us to build the parsed version of the shadowRoot object
-		shadowRootPlaceholder.setHTMLUnsafe(`<div>${template.outerHTML}</div>`);
+		shadowRootPlaceholder.setHTMLUnsafe(`<div>${shadowRootTemplate.outerHTML}</div>`);
 		const shadowRoot = shadowRootPlaceholder.children[0].shadowRoot;
 
 		// attach a new shadow to this element using the properties of the shadowroot object that was created
 		node.attachShadow(shadowRoot);
-		node.shadowRoot.append(template.content.cloneNode(true));
-	}
-
-	/** function that starts both of the mutation observers */
-	startObservers() {
-		this.templateDefinitionObserver.observe(document.documentElement, { childList: true, subtree: true });
-		this.registeredElementObserver.observe(document.documentElement, { childList: true, subtree: true });
-	}
-
-	/** function to stop both of the mutation observers */
-	stopObservers() {
-		this.templateDefinitionObserver.disconnect();
-		this.registeredElementObserver.disconnect();
+		node.shadowRoot.append(shadowRootTemplate.content.cloneNode(true));
 	}
 }
+
+customElements.define('shadowroot-for', ShadowRootInjector);
 
 // check if we are running as a module (if we are, expose the ShadowRootInjector to be imported)
 if (typeof module !== 'undefined') {
 	module.exports = ShadowRootInjector;
 } else {
 	window.ShadowRootInjector = ShadowRootInjector;
-}
-
-// check if the script tag has a `autostart` attribute (this indicates we should build and start the injector),
-// otherwise we'll defer to the user to do this in their own script
-if (document?.currentScript?.hasAttribute('sr-autostart')) {
-	window.shadowRootInjector = new ShadowRootInjector();
-	window.shadowRootInjector.startObservers();
 }

@@ -1,0 +1,31 @@
+<script src="../shadowroot-injector.js"></script>
+
+<shadowroot-for selector=".fancy-quote" mode="open">
+	<template>
+		<style>
+			:host {
+				border-left: solid 3px #dedede;
+				padding: 0.5em;
+			}
+			.citation {
+				display: block;
+				text-align: right;
+				font-style: italic;
+			}
+		</style>
+		<slot></slot>
+		<span class="citation"> Citation: <slot name="citation"></slot> </span>
+	</template>
+</shadowroot-for>
+
+<blockquote class="fancy-quote">
+	The following is a list of elements you can attach a shadow root to:
+	<code>&lt;article&gt;</code>, <code>&lt;aside&gt;</code>, <code>&lt;blockquote&gt;</code>, <code>&lt;body&gt;</code>,
+	<code>&lt;div&gt;</code>, <code>&lt;span&gt;</code>, and more!
+
+	<cite slot="citation">
+		<a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/attachShadow#elements_you_can_attach_a_shadow_to">
+			Elements you can attach a shadow to
+		</a>
+	</cite>
+</blockquote>

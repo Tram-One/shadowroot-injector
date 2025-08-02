@@ -35,5 +35,10 @@ test.describe('ShadowRoot Injector Tests', () => {
 		await expect(testTaskItemRemoveControl).toBeVisible();
 		await testTaskItemRemoveControl.click();
 		await expect(page.locator('task-item')).toHaveCount(1);
+
+		// verify that delegates focus is enabled and puts focus on the remove control
+		await firstTaskItem.click();
+		await page.keyboard.down('Enter');
+		await expect(page.locator('task-item')).toHaveCount(0);
 	});
 });

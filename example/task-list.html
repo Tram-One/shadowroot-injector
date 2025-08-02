@@ -1,20 +1,22 @@
-<script src="../shadowroot-injector.js" sr-autostart></script>
+<script src="../shadowroot-injector.js"></script>
 
-<template sr-tagname="task-item" sr-mode="open">
-	<style>
-		:host {
-			display: list-item;
-		}
-		li {
-			display: flex;
-			gap: 12px;
-		}
-	</style>
-	<li>
-		<slot></slot>
-		<button>remove</button>
-	</li>
-</template>
+<shadowroot-for selector="task-item" mode="open">
+	<template shadowrootdelegatesfocus>
+		<style>
+			:host {
+				display: list-item;
+			}
+			li {
+				display: flex;
+				gap: 12px;
+			}
+		</style>
+		<li>
+			<slot></slot>
+			<button tabindex="0">remove</button>
+		</li>
+	</template>
+</shadowroot-for>
 
 <ul id="taskList">
 	<task-item>Add Items</task-item>
@@ -22,11 +24,12 @@
 </ul>
 
 <script>
+	const taskItemShadowRootInjector = document.querySelector('shadowroot-for[selector="task-item"]');
 	customElements.define(
 		'task-item',
 		class extends HTMLElement {
 			connectedCallback() {
-				shadowRootInjector.injectRegisteredTemplate(this);
+				taskItemShadowRootInjector.injectRegisteredTemplate(this);
 				this.shadowRoot.querySelector('button').addEventListener('click', () => {
 					this.remove();
 				});
